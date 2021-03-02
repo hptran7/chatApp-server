@@ -19,7 +19,7 @@ async function authentication(req, res, next) {
           },
         });
         if (persistedUser) {
-          res.locals.user = { userId: userId };
+          res.locals.user = { userId: userId, userName: userName };
           next();
         } else {
           res.json({ message: "You're not authorized!" });
