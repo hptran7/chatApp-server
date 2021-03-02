@@ -42,11 +42,11 @@ router.post("/add-user", async (req, res) => {
   }
 });
 
-router.post("/send-messages", authentication, async (req, res) => {
+router.post("/send-messages/:roomId", authentication, async (req, res) => {
   const userId = res.locals.user.userId;
-  const roomId = req.body.roomId;
-  const message = req.body.message;
   const userName = res.locals.user.userName;
+  const roomId = req.params.roomId;
+  const message = req.body.message;
 
   const newMessage = await models.roomMessage.build({
     roomId: roomId,
