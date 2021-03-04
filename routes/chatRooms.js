@@ -65,7 +65,7 @@ router.post("/send-messages/:roomId", authentication, async (req, res) => {
 
 //*** display message ***/
 
-router.get("/view-messages/:roomId", async (req, res) => {
+router.get("/view-messages/:roomId", authentication, async (req, res) => {
   const roomId = req.params.roomId;
   const chatRoom = await models.chatRoom.findOne({
     include: [
@@ -87,8 +87,22 @@ router.get("/view-messages/:roomId", async (req, res) => {
       date: message.dataValues.createdAt,
     };
   });
-  console.log(messageList);
   res.json({ message: messageList, displayMessage: true });
+});
+
+/*** view chatroom all users ***/
+router.get("/view-users/:roomId", async (req, res) => {
+  const roomId = req.params.roomId;
+  const allRoomUsersObject = await models.roomUser.findAll({
+    where: {
+      roomId: roomId,
+    },
+  });
+  const listOfAllUsers = allRoomUsersObject.map((user) => {
+    return user.dataValues.userName;
+  });
+
+  res.json({ members: listOfAllUsers, displayMember: true });
 });
 
 module.exports = router;
