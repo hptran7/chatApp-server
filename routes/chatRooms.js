@@ -6,18 +6,62 @@ const authentication = require("../authMiddleware");
 router.post("/create-room", authentication, async (req, res) => {
   const userId = res.locals.user.userId;
   const roomName = req.body.roomName;
+  const persistedUser = await models.User.findOne({
+    where: {
+      id: userId,
+    },
+  });
   const room = await models.chatRoom.build({
     host: userId,
     roomName: roomName,
   });
   room.save().then((result) => {
-    res.json({ roomCreated: true });
+    addUserToRoom(persistedUser.userName, room.id);
+    res.json({ roomCreated: true, message: "New chat room has been created!" });
   });
 });
 
 router.post("/add-user", async (req, res) => {
   const userName = req.body.userName;
+  const roomId = req.body.roomId;
 
+  const result = await addUserToRoom(userName, roomId);
+  if (result == "User has been added to the room") {
+    res.json({
+      addUser: true,
+      message: "This user has been added to the chatroom",
+    });
+  } else if (result == "This username is invalid") {
+    res.json({ addUser: false, message: "This username is invalid" });
+  } else if (result == "User is already in this room") {
+    res.json({ addUser: false, message: "User is already in this room" });
+  }
+
+  // const persistedUser = await models.User.findOne({
+  //   where: {
+  //     userName: userName,
+  //   },
+  // });
+
+  // if (persistedUser) {
+  //   const addUser = await models.roomUser.build({
+  //     roomId: roomId,
+  //     userName: userName,
+  //     userId: persistedUser.id,
+  //   });
+  //   addUser.save().then((result) => {
+  //     res.json({
+  //       addUser: true,
+  //       message: "This user has been added to the chatroom",
+  //     });
+  //   });
+  // } else {
+  //   res.json({ addUser: false, message: "This username is invalid" });
+  // }
+});
+
+/*** add user to room ***/
+const addUserToRoom = async (userName, roomId) => {
   const persistedUser = await models.User.findOne({
     where: {
       userName: userName,
@@ -25,22 +69,26 @@ router.post("/add-user", async (req, res) => {
   });
 
   if (persistedUser) {
-    const roomId = req.body.roomId;
+    const persistedUserInRoom = await models.roomUser.findOne({
+      where: {
+        userId: persistedUser.id,
+        roomId: roomId,
+      },
+    });
+    if (persistedUserInRoom) {
+      return "User is already in this room";
+    }
     const addUser = await models.roomUser.build({
       roomId: roomId,
       userName: userName,
       userId: persistedUser.id,
     });
-    addUser.save().then((result) => {
-      res.json({
-        addUser: true,
-        message: "This user has been added to the chatroom",
-      });
-    });
+    addUser.save();
+    return "User has been added to the room";
   } else {
-    res.json({ addUser: false, message: "This username is invalid" });
+    return "This username is invalid";
   }
-});
+};
 
 router.post("/send-messages/:roomId", authentication, async (req, res) => {
   const userId = res.locals.user.userId;

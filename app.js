@@ -29,6 +29,10 @@ io.on("connection", (socket) => {
     socket.join(roomId);
     // console.log(`new user has joined ${roomId}`);
   });
+  socket.on("leaveRoom", (roomId) => {
+    socket.leave(roomId);
+    // console.log(`new user has joined ${roomId}`);
+  });
 
   socket.on("sendMessage", (messageDetail, callback) => {
     io.in(messageDetail.roomId).emit("message", {
