@@ -1,7 +1,11 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const socketio = require("socket.io");
 const http = require("http");
+
+const PORT = process.env.PORT || 8080;
 
 const app = express();
 const server = http.createServer(app);
@@ -48,6 +52,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen("8080", () => {
+server.listen(PORT, () => {
   console.log("server is runing");
 });
