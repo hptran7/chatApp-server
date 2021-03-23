@@ -9,7 +9,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: "https://powerful-citadel-38170.herokuapp.com/",
+    origin: "https://frozen-oasis-11608.herokuapp.com/",
     methods: ["GET", "POST"],
     allowedHeaders: ["Authorization"],
   },
