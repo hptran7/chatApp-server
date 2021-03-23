@@ -141,6 +141,9 @@ router.get("/view-messages/:roomId", authentication, async (req, res) => {
 /*** view chatroom all users ***/
 router.get("/view-users/:roomId", async (req, res) => {
   const roomId = req.params.roomId;
+  if (!roomId) {
+    res.json({ message: "err" });
+  }
   const allRoomUsersObject = await models.roomUser.findAll({
     where: {
       roomId: roomId,
@@ -158,7 +161,6 @@ router.get("/view-users/:roomId", async (req, res) => {
       avatar: user.dataValues.userDetail.dataValues.avatar,
     };
   });
-  console.log(listOfAllUsers);
 
   res.json({ members: listOfAllUsers, displayMember: true });
 });
