@@ -5,6 +5,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 const authentication = require("../authMiddleware");
+const { route } = require("./chatRooms");
+const { cloudinary } = require("../utils/cloudinary");
 
 router.post("/register", async (req, res) => {
   const userName = req.body.userName;
@@ -29,6 +31,7 @@ router.post("/register", async (req, res) => {
         const user = await models.User.build({
           userName: userName,
           password: hash,
+          avatar: "wvjrjqdys9uqls7aemfg",
         });
         user.save().then((result) => res.json({ userAdded: true }));
       }
@@ -56,6 +59,7 @@ router.post("/login", async (req, res) => {
           login: true,
           token: token,
           userName: persistedUser.userName,
+          userAvatar: persistedUser.avatar,
         });
       } else {
         res.json({
@@ -97,6 +101,29 @@ router.get("/display-chatRoom", authentication, async (req, res) => {
   });
 
   res.json({ roomFetch: true, roomList: chatRoomList });
+});
+
+/*** upload Image to Cloudinary and database ***/
+router.post("/upload-avatar", authentication, async (req, res) => {
+  const userId = res.locals.user.userId;
+  try {
+    const fileStr = req.body.data;
+    const uploadResponse = await cloudinary.uploader.upload(fileStr, {
+      upload_preset: "ml_default",
+    });
+    await models.User.update(
+      {
+        avatar: uploadResponse.public_id,
+      },
+      {
+        where: {
+          id: userId,
+        },
+      }
+    );
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = router;

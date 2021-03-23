@@ -145,12 +145,34 @@ router.get("/view-users/:roomId", async (req, res) => {
     where: {
       roomId: roomId,
     },
+    include: [
+      {
+        model: models.User,
+        as: "userDetail",
+      },
+    ],
   });
   const listOfAllUsers = allRoomUsersObject.map((user) => {
-    return user.dataValues.userName;
+    return {
+      username: user.dataValues.userName,
+      avatar: user.dataValues.userDetail.dataValues.avatar,
+    };
   });
+  console.log(listOfAllUsers);
 
   res.json({ members: listOfAllUsers, displayMember: true });
+});
+
+/** remove user from chat room **/
+router.post("/leave-room/:roomId", authentication, (req, res) => {
+  const roomId = req.params.roomId;
+  const userId = res.locals.user.userId;
+  models.roomUser.destroy({
+    where: {
+      roomId: roomId,
+      userId: userId,
+    },
+  });
 });
 
 module.exports = router;
