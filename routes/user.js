@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const models = require("../models");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt-nodejs");
 const jwt = require("jsonwebtoken");
 const saltRounds = 10;
 const authentication = require("../authMiddleware");
-const { route } = require("./chatRooms");
 const { cloudinary } = require("../utils/cloudinary");
 
 router.post("/register", async (req, res) => {
@@ -21,21 +20,26 @@ router.post("/register", async (req, res) => {
   if (persistedUser) {
     res.json({ userAddes: false, message: "User already exists!" });
   } else {
-    bcrypt.hash(password, saltRounds, async (err, hash) => {
-      if (err) {
-        res.json({
-          userAdded: false,
-          message: "Something went wrong - user cannot created",
-        });
-      } else {
-        const user = await models.User.build({
-          userName: userName,
-          password: hash,
-          avatar: "wvjrjqdys9uqls7aemfg",
-        });
-        user.save().then((result) => res.json({ userAdded: true }));
-      }
+    bcrypt.genSalt(10, function (salt) {
+      bcrypt.hash(password, salt, null, async function (err, hash) {
+        if (err) {
+          res.json({
+            userAdded: false,
+            message: "Something went wrong - user cannot created",
+          });
+        } else {
+          const user = await models.User.build({
+            userName: userName,
+            password: hash,
+            avatar: "wvjrjqdys9uqls7aemfg",
+          });
+          user.save().then((result) => res.json({ userAdded: true }));
+        }
+      });
     });
+    // bcrypt.hash(password, saltRounds, null, async (err, hash) => {
+
+    // });
   }
 });
 
