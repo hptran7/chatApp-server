@@ -22,11 +22,11 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors());
 
 // Routes //
-// const userRoutes = require("./routes/user");
-// const chatRoomsRoutes = require("./routes/chatRooms");
+const userRoutes = require("./routes/user");
+const chatRoomsRoutes = require("./routes/chatRooms");
 
-// app.use("/user", userRoutes);
-// app.use("/chat-room", chatRoomsRoutes);
+app.use("/user", userRoutes);
+app.use("/chat-room", chatRoomsRoutes);
 
 io.on("connection", (socket) => {
   // console.log("We have a new connection");
