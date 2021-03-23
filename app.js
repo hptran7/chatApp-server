@@ -26,29 +26,29 @@ const chatRoomsRoutes = require("./routes/chatRooms");
 app.use("/user", userRoutes);
 app.use("/chat-room", chatRoomsRoutes);
 
-io.on("connection", (socket) => {
-  // console.log("We have a new connection");
-  socket.on("joinRoom", (roomId) => {
-    socket.join(roomId);
-    // console.log(`new user has joined ${roomId}`);
-  });
-  socket.on("leaveRoom", (roomId) => {
-    socket.leave(roomId);
-    // console.log(`new user has joined ${roomId}`);
-  });
+// io.on("connection", (socket) => {
+//   // console.log("We have a new connection");
+//   socket.on("joinRoom", (roomId) => {
+//     socket.join(roomId);
+//     // console.log(`new user has joined ${roomId}`);
+//   });
+//   socket.on("leaveRoom", (roomId) => {
+//     socket.leave(roomId);
+//     // console.log(`new user has joined ${roomId}`);
+//   });
 
-  socket.on("sendMessage", (messageDetail, callback) => {
-    io.in(messageDetail.roomId).emit("message", {
-      user: messageDetail.userName,
-      text: messageDetail.message,
-    });
-    callback();
-  });
+//   socket.on("sendMessage", (messageDetail, callback) => {
+//     io.in(messageDetail.roomId).emit("message", {
+//       user: messageDetail.userName,
+//       text: messageDetail.message,
+//     });
+//     callback();
+//   });
 
-  socket.on("disconnect", () => {
-    // console.log("User has left!!");
-  });
-});
+//   socket.on("disconnect", () => {
+//     // console.log("User has left!!");
+//   });
+// });
 
 server.listen(PORT, () => {
   console.log("server is runing");
