@@ -17,6 +17,8 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors());
 
+const PORT = process.env.PORT || 8080;
+
 // Routes //
 const userRoutes = require("./routes/user");
 const chatRoomsRoutes = require("./routes/chatRooms");
@@ -48,6 +50,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen("8080", () => {
+server.listen(PORT, () => {
   console.log("server is runing");
 });
