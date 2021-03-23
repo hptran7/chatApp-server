@@ -50,6 +50,10 @@ app.use("/chat-room", chatRoomsRoutes);
 //   });
 // });
 
+app.get("/", (req, res) => {
+  res.json({ Hello: "hello" });
+});
+
 server.listen(PORT, () => {
   console.log("server is runing");
 });
