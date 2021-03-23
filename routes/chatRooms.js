@@ -169,12 +169,16 @@ router.get("/view-users/:roomId", async (req, res) => {
 router.post("/leave-room/:roomId", authentication, (req, res) => {
   const roomId = req.params.roomId;
   const userId = res.locals.user.userId;
-  models.roomUser.destroy({
-    where: {
-      roomId: roomId,
-      userId: userId,
-    },
-  });
+  models.roomUser
+    .destroy({
+      where: {
+        roomId: roomId,
+        userId: userId,
+      },
+    })
+    .then(() => {
+      res.json({ leaveRoom: true });
+    });
 });
 
 module.exports = router;
