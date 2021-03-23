@@ -54,6 +54,6 @@ app.get("/", (req, res) => {
   res.json({ Hello: "hello" });
 });
 
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log("server is runing");
 });
