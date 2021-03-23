@@ -32,7 +32,9 @@ io.on("connection", (socket) => {
   // console.log("We have a new connection");
   socket.on("joinRoom", (roomId) => {
     socket.join(roomId);
-    // console.log(`new user has joined ${roomId}`);
+    io.in(roomId).emit("announce", {
+      message: "User has join this room",
+    });
   });
   socket.on("leaveRoom", (roomId) => {
     socket.leave(roomId);
