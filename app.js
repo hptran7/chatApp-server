@@ -5,13 +5,13 @@ const http = require("http");
 
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server, {
-  cors: {
-    origin: "https://powerful-citadel-38170.herokuapp.com/",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Authorization"],
-  },
-});
+// const io = socketio(server, {
+//   cors: {
+//     origin: "https://powerful-citadel-38170.herokuapp.com/",
+//     methods: ["GET", "POST"],
+//     allowedHeaders: ["Authorization"],
+//   },
+// });
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
@@ -54,6 +54,6 @@ app.get("/", (req, res) => {
   res.json({ Hello: "hello" });
 });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("server is runing");
 });
