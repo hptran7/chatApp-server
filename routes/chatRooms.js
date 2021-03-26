@@ -36,28 +36,6 @@ router.post("/add-user", async (req, res) => {
   } else if (result == "User is already in this room") {
     res.json({ addUser: false, message: "User is already in this room" });
   }
-
-  // const persistedUser = await models.User.findOne({
-  //   where: {
-  //     userName: userName,
-  //   },
-  // });
-
-  // if (persistedUser) {
-  //   const addUser = await models.roomUser.build({
-  //     roomId: roomId,
-  //     userName: userName,
-  //     userId: persistedUser.id,
-  //   });
-  //   addUser.save().then((result) => {
-  //     res.json({
-  //       addUser: true,
-  //       message: "This user has been added to the chatroom",
-  //     });
-  //   });
-  // } else {
-  //   res.json({ addUser: false, message: "This username is invalid" });
-  // }
 });
 
 /*** add user to room ***/
