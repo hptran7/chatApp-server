@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: "http://chat-dc.surge.sh",
+    origin: "https://confident-haibt-dd4ed2.netlify.app",
     methods: ["GET", "POST"],
     allowedHeaders: ["Authorization"],
   },
