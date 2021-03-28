@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: "http://chat-dc.surge.sh",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST"],
     allowedHeaders: ["Authorization"],
   },
@@ -39,6 +39,13 @@ io.on("connection", (socket) => {
   socket.on("leaveRoom", (roomId) => {
     socket.leave(roomId);
     // console.log(`new user has joined ${roomId}`);
+  });
+
+  socket.on("call video", (payload) => {
+    io.in(payload.roomId).emit("video invite", {
+      roomId: payload.roomId,
+      userName: payload.userName,
+    });
   });
 
   socket.on("sendMessage", (messageDetail, callback) => {
