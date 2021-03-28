@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://frozen-sierra-45378.herokuapp.com",
     methods: ["GET", "POST"],
     allowedHeaders: ["Authorization"],
   },
@@ -83,6 +83,13 @@ io.on("connection", (socket) => {
       room = room.filter((id) => id !== socket.id);
       users[roomID] = room;
     }
+  });
+
+  socket.on("call video", (payload) => {
+    io.in(payload.roomId).emit("video invite", {
+      roomId: payload.roomId,
+      userName: payload.userName,
+    });
   });
 
   socket.on("sendMessage", (messageDetail, callback) => {
