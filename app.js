@@ -11,7 +11,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server, {
   cors: {
-    origin: "https://http://chat-dc.surge.sh",
+    origin: "http://http://chat-dc.surge.sh",
     methods: ["GET", "POST"],
     allowedHeaders: ["Authorization"],
   },
