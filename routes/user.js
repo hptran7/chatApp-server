@@ -22,7 +22,7 @@ router.post("/register", async (req, res) => {
   if (persistedUser) {
     res.json({ userAddes: false, message: "User already exists!" });
   } else {
-    bcrypt.genSalt(10, async (salt) => {
+    bcrypt.genSalt(saltRounds, async (salt) => {
       bcrypt.hash(password, salt, null, async (err, hash) => {
         if (err) {
           res.json({
@@ -75,7 +75,7 @@ router.post("/login", async (req, res) => {
       }
     });
   } else {
-    res.json({ login: false, message: "Invalid username or password 2" });
+    res.json({ login: false, message: "Invalid username or password" });
   }
 });
 
@@ -127,8 +127,9 @@ router.post("/upload-avatar", authentication, async (req, res) => {
         },
       }
     );
+    res.json({ avatarUpdated: true });
   } catch (error) {
-    console.log(error);
+    res.json({ avatarUpdated: false });
   }
 });
 
