@@ -101,7 +101,20 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    // console.log("User has left!!");
+    const roomID = socketToRoom[socket.id];
+    // io.in(roomId).emit("user left", {
+    //   message: "user has left",
+    // });
+
+    let room = users[roomID];
+    if (room) {
+      room = room.filter((id) => id !== socket.id);
+      users[roomID] = room;
+    }
+    socket.broadcast.emit("user left", {
+      roomID: roomID,
+      socketId: socket.id,
+    });
   });
 });
 
